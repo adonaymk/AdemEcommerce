@@ -47,6 +47,13 @@ namespace API
 
             services.AddApplicationServices(); //Extension service 
             services.AddSwaggerDocumentation(); //Extension for swagger docs
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("CorsPolicy", policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200");
+                });
+            });
 
             // services.AddSwaggerGen(c =>
             // {
@@ -76,6 +83,8 @@ namespace API
             app.UseRouting();
 
             app.UseStaticFiles(); // Loading static image files
+
+            app.UseCors("CorsPolicy");
 
             app.UseAuthorization();
 
