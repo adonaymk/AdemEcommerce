@@ -1,3 +1,4 @@
+import { HomeModule } from './home/home.module';
 import { ShopModule } from './shop/shop.module';
 import { CoreModule } from './core/core.module';
 import { NgModule } from '@angular/core';
@@ -19,6 +20,7 @@ import { AppComponent } from './app.component';
     HttpClientModule,
     CoreModule,
     ShopModule,
+    HomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]
