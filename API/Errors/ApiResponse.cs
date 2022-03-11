@@ -5,11 +5,11 @@ namespace API.Errors
         public ApiResponse(int statusCode, string meassage = null)
         {
             StatusCode = statusCode;
-            Meassage = meassage ?? GetDefaultMessaggeForStatusCode(statusCode);//if it null always take the vale next to ??
+            Message = meassage ?? GetDefaultMessaggeForStatusCode(statusCode);//if it null always take the vale next to ??
         }
 
         public int StatusCode { get; set; }
-        public string Meassage { get; set; }
+        public string Message { get; set; }
         private string GetDefaultMessaggeForStatusCode(int statusCode)
         {
             return statusCode switch
