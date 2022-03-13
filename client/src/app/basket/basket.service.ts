@@ -1,7 +1,7 @@
 import { IProduct } from './../shared/models/product';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { Basket, IBasket, IBasketItem } from './../shared/models/basket';
+import { Basket, IBasket, IBasketItem, IBasketTotals } from './../shared/models/basket';
 import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
@@ -13,6 +13,8 @@ export class BasketService {
   baseUrl = environment.apiUrl;
   private basketSource = new BehaviorSubject<IBasket>(null);
   basket$ = this.basketSource.asObservable();
+  private basketTotalSource = new BehaviorSubject<IBasketTotals>(null);
+  basketTotal$ = this.basketTotalSource.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -21,14 +23,16 @@ export class BasketService {
       .pipe(
         map((basket: IBasket) => {
           this.basketSource.next(basket);
-          console.log(this.getCurrentBasketValue());
+          // console.log(this.getCurrentBasketValue());
+          this.calculateTotals();
         })
       );
   }
   setBasket(basket: IBasket) {
     return this.http.post(this.baseUrl + 'basket', basket).subscribe((response: IBasket) => {
       this.basketSource.next(response);
-      console.log(response);
+      // console.log(response);
+      this.calculateTotals();
     }, error => {
       console.log(error);
     });
@@ -42,6 +46,15 @@ export class BasketService {
     basket.items = this.addOrUpdateItem(basket.items, itemToAdd, quantity);
     this.setBasket(basket);
   }
+
+  private calculateTotals() {
+    const basket = this.getCurrentBasketValue();
+    const shipping = 0;
+    const subtotal = basket.items.reduce((a, b) => (b.price * b.quantity) + a, 0);
+    const total = subtotal + shipping;
+    this.basketTotalSource.next({ shipping, total, subtotal });
+  }
+
   private addOrUpdateItem(items: IBasketItem[], itemToAdd: IBasketItem, quantity: number): IBasketItem[] {
     console.log(items);
     const index = items.findIndex(i => i.id === itemToAdd.id);
