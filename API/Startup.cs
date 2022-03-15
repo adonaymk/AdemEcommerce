@@ -60,7 +60,7 @@ namespace API
             // });
 
             services.AddApplicationServices(); //Extension service 
-            services.AddIdentityServices(); //Identity service for user mgt
+            services.AddIdentityServices(__config); //Identity service for user mgt
             services.AddSwaggerDocumentation(); //Extension for swagger docs
             services.AddCors(opt =>
             {
@@ -100,6 +100,8 @@ namespace API
             app.UseStaticFiles(); // Loading static image files
 
             app.UseCors("CorsPolicy");
+
+            app.UseAuthentication(); //always before Authorization
 
             app.UseAuthorization();
 
