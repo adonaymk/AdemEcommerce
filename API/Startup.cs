@@ -60,6 +60,7 @@ namespace API
             // });
 
             services.AddApplicationServices(); //Extension service 
+            services.AddIdentityServices(); //Identity service for user mgt
             services.AddSwaggerDocumentation(); //Extension for swagger docs
             services.AddCors(opt =>
             {
